@@ -3,6 +3,9 @@ import { Component, OnInit } from "@angular/core";
 import { Item } from "./item";
 import { ItemService } from "./item.service";
 
+import { enableLocationRequest, getCurrentLocation } from 'nativescript-geolocation'
+
+
 @Component({
     selector: "ns-items",
     moduleId: module.id,
@@ -19,5 +22,20 @@ export class ItemsComponent implements OnInit {
 
     ngOnInit(): void {
         this.items = this.itemService.getItems();
+    }
+
+    getLocation() {
+      getCurrentLocation({
+        desiredAccuracy: Accuracy.any,
+        maximumAge: 10000,
+        timeout: 11000,
+        iosOpenSettingsIfLocationHasBeenDenied: true,
+      }).then(function (loc) {
+            if (loc) {
+                that.locations.push(loc);
+            }
+        }, function (e) {
+            console.log("Error: " + (e.message || e));
+        });
     }
 }
